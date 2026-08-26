@@ -97,27 +97,29 @@ internal class Utils
     }
     #endregion
 
+    #region 获取距离物品最近的玩家
     /// <summary>
     /// 获取距离物品最近的玩家
     /// </summary>
-    public static Player? GetPlayer(Entity entity, float maxDistance = 200f)
+    public static Player? GetPlayer(Entity entity, float max = 200f)
     {
-        Player? nearest = null;
-        float nearestDist = float.MaxValue;
+        Player? best = null;
+        float bestD = float.MaxValue;
 
         for (int i = 0; i < Main.maxPlayers; i++)
         {
             Player p = Main.player[i];
             if (p?.active != true) continue;
 
-            float dist = entity.Distance(p.Center);
-            if (dist < nearestDist)
+            float d = entity.Distance(p.Center);
+            if (d < bestD)
             {
-                nearestDist = dist;
-                nearest = p;
+                bestD = d;
+                best = p;
             }
         }
 
-        return (nearest != null && nearestDist <= maxDistance) ? nearest : null;
-    }
+        return (best != null && bestD <= max) ? best : null;
+    } 
+    #endregion
 }

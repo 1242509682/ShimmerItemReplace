@@ -384,11 +384,7 @@ public class ShimmerItemReplace : TerrariaPlugin
             // 找最近的玩家
             Player? plr = GetPlayer(item);
 
-            if (plr?.active != true)
-            {
-                TShock.Log.ConsoleInfo("[ShimmerItemReplace] 无有效玩家，拒绝分解");
-                return false;
-            }
+            if (plr?.active != true) return false;
 
             // 检查图格
             plr.AdjTiles();
@@ -407,6 +403,7 @@ public class ShimmerItemReplace : TerrariaPlugin
                 item.playerIndexTheItemIsReservedFor = 255;
                 item.timeToKeepReservation = 0;
                 item.SyncItem();
+
                 return false;
             }
         }
