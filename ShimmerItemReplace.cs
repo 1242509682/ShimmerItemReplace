@@ -10,6 +10,7 @@ using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
 using Microsoft.Xna.Framework;
+using static ShimmerItemReplace.Utils;
 
 namespace ShimmerItemReplace;
 
@@ -300,19 +301,10 @@ public class ShimmerItemReplace : TerrariaPlugin
                 break;
         }
 
-        // 利用掉落物反推服务器玩家索引，确保正确添加幸运值
-        // 添加判空，防止 playerIndexTheItemIsReservedFor = 255 时崩溃
-        int plrIdx = item.playerIndexTheItemIsReservedFor;
-        if (plrIdx >= 0 && plrIdx < Main.maxPlayers)
-        {
-            TSPlayer tsplr = TShock.Players[plrIdx];
-            if (tsplr != null && tsplr.Active)
-            {
-                Player plr = tsplr.TPlayer;
-                if (plr != null && plr.active)
-                    plr.AddCoinLuck(item.Center, item.stack);
-            }
-        }
+        // 获取最近玩家添加幸运值
+        Player? player = GetPlayer(item);
+        if (player?.active == true)
+            player.AddCoinLuck(item.Center, item.stack);
 
         NetMessage.SendData(MessageID.ShimmerActions, -1, -1, null, 1, item.Center.X, item.Center.Y, item.stack);
         item.type = 0;
@@ -382,74 +374,67 @@ public class ShimmerItemReplace : TerrariaPlugin
         PostProcess(item);
     }
 
-    /// <summary>
     /// 自定义分解（带飞行动画），支持图格条件检查（服务端）
     /// </summary>
     private static bool TryCustomDecraft(WorldItem item, RecipeInfo rule, Vector2 from, Vector2 to)
     {
-        // ---- 1. 检查是否满足图格条件（服务端） ----
+        // ---- 图格检查 ----
         if (rule.requiredTile >= 0)
         {
-            int plrIdx = item.playerIndexTheItemIsReservedFor;
-            if (plrIdx < 0 || plrIdx >= Main.maxPlayers)
-                return false;
+            // 找最近的玩家
+            Player? plr = GetPlayer(item);
 
-            // 使用 TShock 玩家数组获取 Player 对象
-            TSPlayer tsplr = TShock.Players[plrIdx];
-            if (tsplr == null || !tsplr.Active)
+            if (plr?.active != true)
+            {
+                TShock.Log.ConsoleInfo("[ShimmerItemReplace] 无有效玩家，拒绝分解");
                 return false;
+            }
 
-            Player plr = tsplr.TPlayer;
-            if (plr == null || !plr.active)
-                return false;
-
-            // 强制刷新玩家附近的图格状态
+            // 检查图格
             plr.AdjTiles();
             if (!plr.adjTile[rule.requiredTile])
             {
-                // 通知玩家
-                tsplr.SendInfoMessage($"缺少所需图格 (ID:{rule.requiredTile})，无法分解");
-                return false; // 不消耗物品
+                // 使用 GetTileName 获取图格中文名
+                string tileName = GetTileName(rule.requiredTile);
+                TShock.Players[plr.whoAmI]?.SendInfoMessage($"需要 {tileName} 才能分解");
+
+                // 重置物品微光状态，使其可被拾取
+                item.shimmerTime = 0f;
+                item.shimmered = false;
+                item.shimmerWet = false;
+                item.wet = false;
+                item.velocity = Vector2.Zero;
+                item.playerIndexTheItemIsReservedFor = 255;
+                item.timeToKeepReservation = 0;
+                item.SyncItem();
+                return false;
             }
         }
 
-        // ---- 2. 计算可分解次数 ----
-        int stack = item.stack;
-        int createStack = rule.createItem.stack;
-        int times = stack / createStack;
-        if (times == 0) return false; // 不足一次，不分解
+        // ---- 分解逻辑 ----
+        int times = item.stack / rule.createItem.stack;
+        if (times == 0) return false;
 
-        // ---- 3. 原物品立即消失 ----
-        item.type = 0;
-        item.stack = 0;
+        // 清除原物品
         item.TurnToAir();
         item.SyncItem();
 
-        // ---- 4. 播放上升飞行动画 ----
+        // 飞行动画
         Animations.PlayFlyAnimation(from, to, rule.createItem.type);
 
-        // ---- 5. 为每种材料创建延迟生成任务 ----
+        // 生成材料
         int delay = 0;
-        const int delayStep = 15; // 每材料间隔帧数
-        foreach (var kv in rule.requiredItems)  // Key = 物品ID, Value = 单次数量
+        foreach (var kv in rule.requiredItems)
         {
-            int matType = kv.Key;
-            int perStack = kv.Value;
-            int total = perStack * times;
+            Vector2 pos = to + new Vector2(Main.rand.Next(-30, 31), Main.rand.Next(-30, 31));
+            pos.X = Math.Clamp(pos.X, 32, (Main.maxTilesX - 1) * 16);
+            pos.Y = Math.Clamp(pos.Y, 32, (Main.maxTilesY - 1) * 16);
 
-            Vector2 matPos = to;
-            int offPx = 30;
-            float offX = Main.rand.Next(-offPx, offPx + 1);
-            float offY = Main.rand.Next(-offPx, offPx + 1);
-            matPos = to + new Vector2(offX, offY);
-            matPos.X = Math.Clamp(matPos.X, 32, (Main.maxTilesX - 1) * 16);
-            matPos.Y = Math.Clamp(matPos.Y, 32, (Main.maxTilesY - 1) * 16);
-
-            Animations.AddTask(matType, total, matPos, delay);
-            delay += delayStep;
+            Animations.AddTask(kv.Key, kv.Value * times, pos, delay);
+            delay += 15;
         }
 
-        // ---- 6. 终点特效 ----
+        // 终点特效
         var settings = new ParticleOrchestraSettings
         {
             PositionInWorld = to,
@@ -553,66 +538,4 @@ public class ShimmerItemReplace : TerrariaPlugin
     }
     #endregion
 
-    #region 辅助工具：进度值翻译与备注生成
-    /// <summary> 检查进度条件是否满足 </summary>
-    public static bool CheckProgress(byte progress)
-    {
-        if (progress < 0 || progress >= DownedFuncs.Length) return true;
-        return DownedFuncs[progress]();
-    }
-
-    /// <summary> 为每个转换规则生成自动备注 </summary>
-    public static void ShowMess()
-    {
-        foreach (var info in config.Replace)
-        {
-            info.Text = string.Empty;
-            string clear = info.clear ? "并阻止转换" : "";
-            if (string.IsNullOrEmpty(info.Text))
-                info.Text = $"{ProgMess(info.progress)} 将 《{Lang.GetItemNameValue(info.srcType)}》 转换为 《{Lang.GetItemNameValue(info.destType)}》{clear}";
-        }
-    }
-
-    /// <summary> 进度值 → 中文描述 </summary>
-    public static string ProgMess(byte prog)
-    {
-        return prog switch
-        {
-            0 => "无条件",
-            1 => "击败史王",
-            2 => "击败克眼",
-            3 => "击败世吞克脑",
-            4 => "击败蜂王",
-            5 => "击败骷髅王",
-            6 => "击败鹿角怪",
-            7 => "击败血肉墙",
-            8 => "击败史莱姆皇后",
-            9 => "击败任意机械BOSS",
-            10 => "击败毁灭者",
-            11 => "击败双子眼",
-            12 => "击败机械骷髅王",
-            13 => "击败世花",
-            14 => "击败石巨人",
-            15 => "击败猪鲨",
-            16 => "击败光女",
-            17 => "击败教徒",
-            18 => "击败日耀柱",
-            19 => "击败星云柱",
-            20 => "击败星璇柱",
-            21 => "击败星尘柱",
-            22 => "击败月总",
-            23 => "击败哀木",
-            24 => "击败南瓜王",
-            25 => "击败常绿尖叫怪",
-            26 => "击败圣诞坦克",
-            27 => "击败冰雪女王",
-            28 => "击败四柱",
-            29 => "击败血月小丑",
-            30 => "击败哥布林入侵",
-            31 => "击败海盗入侵",
-            32 => "击败火星暴乱",
-            _ => string.Empty
-        };
-    }
-    #endregion
 }

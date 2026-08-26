@@ -26,8 +26,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -36,7 +40,7 @@
               "RelativeDocumentMoniker": "MyCmd.cs",
               "ToolTip": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\MyCmd.cs",
               "RelativeToolTip": "MyCmd.cs",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAqwGoAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAHAAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-26T08:17:47.637Z",
               "EditorCaption": ""
@@ -49,7 +53,7 @@
               "RelativeDocumentMoniker": "Config.cs",
               "ToolTip": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\Config.cs",
               "RelativeToolTip": "Config.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAIQAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAK8AAAAAAAAAAAAAAIQAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-26T08:11:41.393Z",
               "EditorCaption": ""
@@ -62,7 +66,7 @@
               "RelativeDocumentMoniker": "README.md",
               "ToolTip": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\README.md",
               "RelativeToolTip": "README.md",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAADcAAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2026-08-26T08:01:03.725Z",
               "EditorCaption": ""
@@ -75,7 +79,7 @@
               "RelativeDocumentMoniker": "ShimmerItemReplace.cs",
               "ToolTip": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\ShimmerItemReplace.cs",
               "RelativeToolTip": "ShimmerItemReplace.cs",
-              "ViewState": "AgIAALgBAAAAAAAAAAAtwMgBAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAHUBAAAAAAAAAAAAAIkBAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-26T08:01:02.289Z",
               "EditorCaption": ""
