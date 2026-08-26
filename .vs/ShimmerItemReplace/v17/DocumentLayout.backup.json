@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A6E38D21-34B0-4738-A562-124F9980C5E0}|ShimmerItemReplace.csproj|d:\\\u6E38\u620F\\terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\shimmeritemreplace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6E38D21-34B0-4738-A562-124F9980C5E0}|ShimmerItemReplace.csproj|solutionrelative:shimmeritemreplace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6E38D21-34B0-4738-A562-124F9980C5E0}|ShimmerItemReplace.csproj|d:\\\u6E38\u620F\\terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6E38D21-34B0-4738-A562-124F9980C5E0}|ShimmerItemReplace.csproj|solutionrelative:config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6E38D21-34B0-4738-A562-124F9980C5E0}|ShimmerItemReplace.csproj|d:\\\u6E38\u620F\\terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A6E38D21-34B0-4738-A562-124F9980C5E0}|ShimmerItemReplace.csproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Config.cs",
+              "DocumentMoniker": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\Config.cs",
+              "RelativeDocumentMoniker": "Config.cs",
+              "ToolTip": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\Config.cs",
+              "RelativeToolTip": "Config.cs",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAAAJwAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-26T08:11:41.393Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "README.md",
+              "DocumentMoniker": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\README.md",
+              "RelativeDocumentMoniker": "README.md",
+              "ToolTip": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\README.md",
+              "RelativeToolTip": "README.md",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAADcAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-08-26T08:01:03.725Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ShimmerItemReplace.cs",
+              "DocumentMoniker": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\ShimmerItemReplace.cs",
+              "RelativeDocumentMoniker": "ShimmerItemReplace.cs",
+              "ToolTip": "d:\\\u6E38\u620F\\Terraria\\\u670D\u52A1\u5668\\1.4.5\\\u63D2\u4EF6\u6E90\u7801\\\u3010\u6E90\u7801\u3011\u81EA\u5B9A\u4E49\u5FAE\u5149\u8F6C\u6362 v1.3.0\\ShimmerItemReplace.cs",
+              "RelativeToolTip": "ShimmerItemReplace.cs",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAADUBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-26T08:01:02.289Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

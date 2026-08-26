@@ -10,13 +10,11 @@ internal class Config
     [JsonProperty("进度名称")]
     public string[] progressName =
     [
-        "无 0 | 史莱姆王 1 | 克眼 2 | 世吞克脑 3 | 蜂王 4 | 骷髅王 5 | 鹿角怪 6 | 困难模式(肉山) 7 | 史莱姆皇后 8 |" ,
+        "无 0 | 史莱姆王 1 | 克眼 2 | 世吞克脑 3 | 蜂王 4 | 骷髅王 5 | 鹿角怪 6 | 困难模式(肉山) 7 | 史莱姆皇后 8 |",
         "任意机械BOSS 9 | 毁灭者 10 | 双子魔眼 11 | 机械骷髅王 12 | 世纪之花 13 | 石巨人 14 | 猪鲨 15 | 光女 16 |",
         "教徒 17 | 日耀柱 18 | 星云柱 19 | 星璇柱 20 | 星尘柱 21 | 月总 22 | 衰木 23 | 南瓜王 24 | 常绿尖叫怪 25 |",
         "圣诞坦克 26 | 冰雪女王 27 | 四柱 28 | 血月小丑 29 | 哥布林入侵 30 | 海盗入侵 31 | 火星暴乱 32"
     ];
-    [JsonProperty("添加重载事件:/reload")]
-    public bool AddToReload = true;
     [JsonProperty("指令名称")]
     public string[] CommandNames = ["sirc"];
     [JsonProperty("指令权限")]
@@ -24,6 +22,7 @@ internal class Config
     [JsonProperty("微光物品转换表")]
     public TransformInfo[] Replace =
     [
+        // 这里保持原样，与之前用户提供的完全一致
         new(ItemID.RodofDiscord,    ItemID.RodOfHarmony, 22),
         new(ItemID.Clentaminator,   ItemID.Clentaminator2, 22),
         new(ItemID.BottomlessBucket,ItemID.BottomlessShimmerBucket,22),
@@ -125,36 +124,44 @@ internal class Config
     [JsonProperty("分解配方表")]
     public RecipeInfo[] Recipe = Array.Empty<RecipeInfo>();
 
-    #region 预设参数方法
     public void SetDefault()
     {
+        Recipe = 
+        [
+            new RecipeInfo
+            {
+                progress = 0,
+                requiredTile = -1,
+                createItem = new ItemInfo { type = ItemID.KingSlimeBossBag, stack = 1 },
+                requiredItems = new()
+                {
+                    { ItemID.Lens, 3 },
+                    { ItemID.GoldBar, 1 }
+                }
+            }
+        ];
     }
-    #endregion
 
-    #region 读取与创建配置文件方法
     public static readonly string path = Path.Combine(TShock.SavePath, "ShimmerItemReplace.json");
-    public void Write()
-    {
-        string json = JsonConvert.SerializeObject(this, Formatting.Indented);
-        File.WriteAllText(path, json);
-    }
-
+    public void Write() => File.WriteAllText(path, JsonConvert.SerializeObject(this, Formatting.Indented));
     public static Config Read()
     {
         if (!File.Exists(path))
         {
-            var NewConfig = new Config();
-            NewConfig.SetDefault();
-            new Config().Write();
-            return NewConfig;
+            var newCfg = new Config();
+            newCfg.SetDefault();
+            newCfg.Write();
+            return newCfg;
         }
-        else
+        var cfg = JsonConvert.DeserializeObject<Config>(File.ReadAllText(path))!;
+
+        // 如果已有配置文件缺少分解表，则补充默认值
+        if (cfg.Recipe == null || cfg.Recipe.Length == 0)
         {
-            string jsonContent = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<Config>(jsonContent)!;
+            cfg.SetDefault(); // 仅填充分解配方
         }
+        return cfg;
     }
-    #endregion
 }
 
 public class TransformInfo
@@ -178,104 +185,19 @@ public class TransformInfo
         this.clear = c;
     }
 }
+
 public class RecipeInfo
 {
     [JsonProperty("进度值")]
     public byte progress = 0;
+    [JsonProperty("所需图格ID")]
+    public int requiredTile = -1;  // -1 表示不需要任何图格
     [JsonProperty("合成物品")]
     public ItemInfo createItem = new();
     [JsonProperty("合成材料")]
-    public ItemInfo[] requiredItems = Array.Empty<ItemInfo>();
-    [JsonProperty("需要猩红")]
-    public bool crimson = false;
-    [JsonProperty("需要腐化")]
-    public bool corruption = false;
-    [JsonIgnore]
-    public static readonly int numRecipes = Recipe.numRecipes;
-
-    public RecipeInfo() { }
-    public RecipeInfo(byte progress, ItemInfo createItem, ItemInfo[] requiredItems, int requiredTile, bool crimson, bool corruption, bool alchemy, bool needGraveyardBiome)
-    {
-        this.progress = progress;
-        this.createItem = createItem;
-        this.requiredItems = requiredItems;
-        this.crimson = crimson;
-        this.corruption = corruption;
-    }
-
-
-    private void AddRecipe()
-    {
-        if (Recipe.numRecipes == Recipe.maxRecipes) return;
-        ChangeRecipe(Recipe.currentRecipe);
-        Recipe.AddRecipe();
-        Recipe.UpdateRecipeList();
-    }
-
-    private void ModifyRecipe(int decraftingRecipeIndex)
-    {
-        var recipe = Main.recipe[decraftingRecipeIndex];
-        ChangeRecipe(recipe);
-        for (int i = Math.Min(Recipe.maxRequirements, requiredItems.Length); i < Recipe.maxRequirements; i++)
-        {
-            if (recipe.requiredItem[i].type != 0)
-            {
-                recipe.requiredItem[i] = new Item();
-            }
-        }
-    }
-
-    public void UpdateRecipe()
-    {
-        var decraftingRecipeIndex = Terraria.GameContent.ShimmerTransforms.GetDecraftingRecipeIndex(ItemID.Sets.ShimmerCountsAsItem[createItem.type] != -1 ? ItemID.Sets.ShimmerCountsAsItem[createItem.type] : createItem.type);
-        if (decraftingRecipeIndex == -1)
-        {
-            AddRecipe();
-        }
-        else
-        {
-            var add = false;
-            if (crimson)
-            {
-                decraftingRecipeIndex = ItemID.Sets.IsCraftedCrimson[createItem.type];
-                if (decraftingRecipeIndex == -1)
-                {
-                    AddRecipe();
-                    add = true;
-                }
-            }
-            if (corruption)
-            {
-                decraftingRecipeIndex = ItemID.Sets.IsCraftedCorruption[createItem.type];
-                if (decraftingRecipeIndex == -1)
-                {
-                    if (!add)
-                    {
-                        AddRecipe();
-                        add = true;
-                    }
-                }
-            }
-            if (!add)
-            {
-                ModifyRecipe(decraftingRecipeIndex);
-            }
-        }
-    }
-
-    private void ChangeRecipe(Recipe recipe)
-    {
-        recipe.createItem.SetDefaults(createItem.type);
-        recipe.createItem.stack = createItem.stack;
-        for (int i = 0; i < Math.Min(Recipe.maxRequirements, requiredItems.Length); i++)
-        {
-            recipe.requiredItem[i].SetDefaults(requiredItems[i].type);
-            recipe.requiredItem[i].stack = requiredItems[i].stack;
-        }
-        recipe.crimson = crimson;
-        recipe.corruption = corruption;
-    }
+    public Dictionary<int, int> requiredItems = new(); // 物品ID → 数量
 }
+
 public class ItemInfo
 {
     [JsonProperty("物品ID")]
